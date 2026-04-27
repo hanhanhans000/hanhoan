@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyen Ngoc Bao Han — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600;700&family=Lustria&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav" aria-label="Primary">
+            <div class="nav__group nav__group--left">
+                <a href="#work" class="nav-link nav-link--current" aria-current="page">Work</a>
+                <a href="play.html" class="nav-link">Play</a>
+            </div>
+            <a href="./" class="nav__star" aria-label="Home">
+                <svg class="nav__star-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 2L13.9 8.1L20 10L13.9 11.9L12 18L10.1 11.9L4 10L10.1 8.1L12 2Z" fill="currentColor"/>
+                </svg>
+            </a>
+            <div class="nav__group nav__group--right">
+                <a href="https://www.linkedin.com/" class="nav-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" data-parallax aria-labelledby="hero-heading">
+            <div class="hero__bg" aria-hidden="true">
+                <div class="hero__lv-base"></div>
+                <div class="hero__lv-stripe" data-parallax-depth="0.35" style="--fx: 78%; --fy: 22%;"></div>
+                <div class="hero__lv-square" data-parallax-depth="-0.45" style="--fx: 12%; --fy: 70%;"></div>
+                <div class="hero__noise"></div>
+            </div>
+            <div class="hero__inner">
+                <h1 id="hero-heading" class="hero__title">Design, visual systems &amp; playful experiments.</h1>
+                <div class="hero__credentials">
+                    <p class="hero__line">
+                        <a class="hero__accent" href="https://hanhoan.xyz/" target="_blank" rel="noopener noreferrer">Nguyen Ngoc Bao Han</a>
+                        — branding, editorial, and digital design.
+                        See also <a href="https://hanhoan.xyz/design/" target="_blank" rel="noopener noreferrer">Design</a>
+                        <span class="hero__sep">|</span>
+                        <a href="https://hanhoan.xyz/recentexplore/" target="_blank" rel="noopener noreferrer">Recent exploration</a>
+                        <span class="hero__sep">|</span>
+                        <a href="play.html">Play</a>
+                    </p>
+                    <p class="hero__line hero__line--muted">
+                        Each row opens a project page on this site; Readymag case studies are linked from those pages where available.
+                    </p>
+                </div>
+                <a href="#about" class="about-cta">
+                    <span class="about-cta__glow" aria-hidden="true"></span>
+                    <span class="about-cta__text">About me</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="work" class="section section--work">
+            <h2 class="section__label">Work</h2>
+            <p class="section__lede">Selected design work — each title has its own HTML page in <code style="font-size:0.9em;">projects/</code> with matching CSS and JS.</p>
+            <div class="projects-list">
+                <a class="project-row project-row--internal" href="projects/lider-lider.html">
+                    <div class="project-row__meta">
+                        <span class="project-row__year">Showcase</span>
+                        <span class="project-row__cat">Brand</span>
+                        <span class="project-row__title">Lider × Lider</span>
+                    </div>
+                    <p class="project-row__desc">Brand and identity — project page with Readymag case study link.</p>
+                    <p class="project-row__tags">Branding · Identity</p>
+                </a>
+                <a class="project-row project-row--internal" href="projects/bong-hoa-nho.html">
+                    <div class="project-row__meta">
+                        <span class="project-row__year">Showcase</span>
+                        <span class="project-row__cat">Event</span>
+                        <span class="project-row__title">Bong Hoa Nho</span>
+                    </div>
+                    <p class="project-row__desc">Event identity, zines, posters, social assets, and promotional video.</p>
+                    <p class="project-row__tags">Event · Video · Campaign</p>
+                </a>
+                <a class="project-row project-row--internal" href="projects/hayla.html">
+                    <div class="project-row__meta">
+                        <span class="project-row__year">Showcase</span>
+                        <span class="project-row__cat">Brand</span>
+                        <span class="project-row__title">Hayla</span>
+                    </div>
+                    <p class="project-row__desc">Brand identity, stationery &amp; collateral.</p>
+                    <p class="project-row__tags">Branding · Stationery · Identity</p>
+                </a>
+                <a class="project-row project-row--internal" href="projects/kho-qua-sunday-project.html">
+                    <div class="project-row__meta">
+                        <span class="project-row__year">Showcase</span>
+                        <span class="project-row__cat">Event</span>
+                        <span class="project-row__title">Kho qua × Sunday project</span>
+                    </div>
+                    <p class="project-row__desc">Visual identity for the event — invites, zines, posters, and social media assets.</p>
+                    <p class="project-row__tags">Event · Zine · Social</p>
+                </a>
+                <a class="project-row project-row--internal" href="projects/syncity.html">
+                    <div class="project-row__meta">
+                        <span class="project-row__year">Showcase</span>
+                        <span class="project-row__cat">Project</span>
+                        <span class="project-row__title">Syncity</span>
+                    </div>
+                    <p class="project-row__desc">Dedicated project page — add your public case study URL when it is ready.</p>
+                    <p class="project-row__tags">Case study</p>
+                </a>
+                <a class="project-row project-row--internal" href="projects/chip-chat-chop-cooking-club.html">
+                    <div class="project-row__meta">
+                        <span class="project-row__year">Capstone 2</span>
+                        <span class="project-row__cat">WIP</span>
+                        <span class="project-row__title">Chip Chat Chop Cooking Club</span>
+                    </div>
+                    <p class="project-row__desc">Placeholder showcase for Capstone 2 — slots ready for process and finals.</p>
+                    <p class="project-row__tags">Capstone · Coming soon</p>
+                </a>
+            </div>
+        </section>
+
+        <div class="footer-band" id="about">
+            <div class="footer-band__inner">
+                <div class="footer-card">
+                    <blockquote class="footer-card__quote">
+                        <p>“We can’t solve problems &#127922; with the same thinking we used to create them.”</p>
+                        <cite class="footer-card__cite">Albert Einstein</cite>
+                    </blockquote>
+
+                    <div class="social-rows">
+                        <a class="social-row" href="https://www.instagram.com/hann___hoan/" target="_blank" rel="noopener noreferrer">
+                            <span class="social-row__icon social-row__icon--ig" aria-hidden="true"></span>
+                            <span class="social-row__label">Instagram</span>
+                            <span class="social-row__arrow" aria-hidden="true">→</span>
+                        </a>
+                        <a class="social-row" href="mailto:hansnguyen.work@gmail.com">
+                            <span class="social-row__icon social-row__icon--mail" aria-hidden="true"></span>
+                            <span class="social-row__label">hansnguyen.work@gmail.com</span>
+                            <span class="social-row__arrow" aria-hidden="true">→</span>
+                        </a>
+                        <a class="social-row" href="https://hanhoan.xyz/design/" target="_blank" rel="noopener noreferrer">
+                            <span class="social-row__icon social-row__icon--link" aria-hidden="true"></span>
+                            <span class="social-row__label">Previous portfolio (Readymag)</span>
+                            <span class="social-row__arrow" aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <p class="footer-legal">
+                    <a href="https://hanhoan.xyz/" class="footer-legal__link" target="_blank" rel="noopener noreferrer">Copyright © <span id="current-year">2026</span> Nguyen Ngoc Bao Han</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

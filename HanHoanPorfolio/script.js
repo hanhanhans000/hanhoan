@@ -1,144 +1,112 @@
-// Set current year in footer (matching madanidesign.com)
-document.getElementById('current-year').textContent = '2026';
-
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            const navHeight = document.querySelector('.nav').offsetHeight;
-            const targetPosition = target.offsetTop - navHeight;
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Project modal functionality
-const modal = document.getElementById('project-modal');
-const projectItems = document.querySelectorAll('.project-item');
-const modalClose = document.querySelector('.modal-close');
-
-// Project data matching the exact structure from madanidesign.com
-const projectData = {
-    1: {
-        year: 'Dec 2025',
-        category: 'Web',
-        title: 'Keep Magazine',
-        description: 'Publishing systems, directory logic, editorial structure.',
-        tags: 'Publishing Directory Based Editorial'
-    },
-    2: {
-        year: '2024',
-        category: 'Web',
-        title: 'Loops.szn',
-        description: 'Interactive portfolio with floating windows, interaction decisions and parallax motion.',
-        tags: 'UI Interactive Portfolio Web'
-    },
-    3: {
-        year: '2025',
-        category: 'Direction',
-        title: 'Editorial Spreads',
-        description: 'Editorial spreads',
-        tags: 'Editorial Print Mixed media'
-    },
-    4: {
-        year: '2025',
-        category: 'Content',
-        title: 'Content Design',
-        description: 'Short-form and editorial video design for personal and client platforms.',
-        tags: 'Video Motion Social'
-    },
-    5: {
-        year: 'Ongoing',
-        category: 'Content',
-        title: 'Shovel Studio',
-        description: 'Making design and visual briefs for Shovel Studio.',
-        tags: 'Systems Strategy Reels'
-    },
-    6: {
-        year: 'Sep 2025',
-        category: 'Direction',
-        title: 'Dog Tags',
-        description: 'Direction notes, material decisions.',
-        tags: 'Direction Marketing Graphic Design'
+(function () {
+    const yearEl = document.getElementById("current-year");
+    if (yearEl) {
+        yearEl.textContent = String(new Date().getFullYear());
     }
-};
 
-// Open modal when project is clicked
-projectItems.forEach(item => {
-    item.addEventListener('click', function() {
-        const projectId = this.getAttribute('data-project');
-        const data = projectData[projectId];
-        
-        if (data) {
-            // Populate modal with project data in the same format
-            const modalMeta = document.querySelector('.modal-meta');
-            modalMeta.innerHTML = `<span class="modal-year">${data.year}</span><strong>**${data.category}**</strong><span class="modal-title">${data.title}</span>`;
-            
-            document.querySelector('.modal-description').textContent = data.description;
-            document.querySelector('.modal-tags').textContent = data.tags;
-            
-            // Show modal
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+    const header = document.querySelector(".site-header");
+    const navHeight = header ? header.offsetHeight : 0;
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+        anchor.addEventListener("click", function (e) {
+            const id = this.getAttribute("href");
+            if (!id || id === "#") return;
+            const target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 8;
+            window.scrollTo({ top: top, behavior: "smooth" });
+        });
     });
-});
 
-// Close modal
-function closeModal() {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-}
+    const modal = document.getElementById("project-modal");
+    const modalMeta = modal?.querySelector(".modal__meta");
+    const modalDesc = modal?.querySelector(".modal__description");
+    const modalTags = modal?.querySelector(".modal__tags");
+    const modalClose = modal?.querySelector(".modal__close");
 
-modalClose.addEventListener('click', closeModal);
+    const projectData = {
+        1: {
+            year: "Dec 2025",
+            category: "Web",
+            title: "Keep Magazine",
+            description: "Publishing systems, directory logic, editorial structure.",
+            tags: "Publishing · Directory · Editorial",
+        },
+        2: {
+            year: "2024",
+            category: "Web",
+            title: "Loops.szn",
+            description: "Interactive portfolio with floating windows and motion.",
+            tags: "UI · Interactive · Portfolio",
+        },
+        3: {
+            year: "2025",
+            category: "Direction",
+            title: "Editorial Spreads",
+            description: "Editorial spreads and print exploration.",
+            tags: "Editorial · Print · Mixed media",
+        },
+        4: {
+            year: "2025",
+            category: "Content",
+            title: "Content Design",
+            description: "Short-form and editorial video for platforms.",
+            tags: "Video · Motion · Social",
+        },
+        5: {
+            year: "Ongoing",
+            category: "Content",
+            title: "Shovel Studio",
+            description: "Design and visual briefs for Shovel Studio.",
+            tags: "Systems · Strategy · Reels",
+        },
+        6: {
+            year: "Sep 2025",
+            category: "Direction",
+            title: "Dog Tags",
+            description: "Direction notes and material decisions.",
+            tags: "Direction · Marketing · Graphic design",
+        },
+    };
 
-// Close modal when clicking outside
-modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-        closeModal();
+    function openModal(data) {
+        if (!modal || !modalMeta || !modalDesc || !modalTags) return;
+        modalMeta.innerHTML =
+            '<span class="modal-year">' +
+            data.year +
+            '</span> · <strong>' +
+            data.category +
+            "</strong> — " +
+            data.title;
+        modalDesc.textContent = data.description;
+        modalTags.textContent = data.tags;
+        modal.hidden = false;
+        document.body.style.overflow = "hidden";
+        modalClose?.focus();
     }
-});
 
-// Close modal with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-        closeModal();
+    function closeModal() {
+        if (!modal) return;
+        modal.hidden = true;
+        document.body.style.overflow = "";
     }
-});
 
-// Add subtle fade-in animation on scroll
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+    document.querySelectorAll(".project-row").forEach(function (row) {
+        row.addEventListener("click", function () {
+            const id = this.getAttribute("data-project");
+            const data = projectData[id];
+            if (data) openModal(data);
+        });
     });
-}, observerOptions);
 
-// Observe project items for fade-in
-projectItems.forEach(item => {
-    item.style.opacity = '0';
-    item.style.transform = 'translateY(20px)';
-    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(item);
-});
+    modalClose?.addEventListener("click", closeModal);
 
-// Observe about and contact sections
-const sections = document.querySelectorAll('.about-section, .contact-section');
-sections.forEach(section => {
-    section.style.opacity = '0';
-    section.style.transform = 'translateY(20px)';
-    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(section);
-});
+    modal?.addEventListener("click", function (e) {
+        if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal && !modal.hidden) closeModal();
+    });
+})();

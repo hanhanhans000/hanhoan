@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play — Nguyen Ngoc Bao Han</title>
+    <meta name="description" content="Playground — side projects and experiments, inspired by playful portfolio layouts.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700&family=Inter:wght@400;500;600;700&family=Lustria&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="play.css">
+</head>
+<body class="play-page">
+    <header class="site-header">
+        <nav class="nav" aria-label="Primary">
+            <div class="nav__group nav__group--left">
+                <a href="index.html#work" class="nav-link">Work</a>
+                <a href="play.html" class="nav-link nav-link--current" aria-current="page">Play</a>
+            </div>
+            <a href="index.html" class="nav__star" aria-label="Home">
+                <svg class="nav__star-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 2L13.9 8.1L20 10L13.9 11.9L12 18L10.1 11.9L4 10L10.1 8.1L12 2Z" fill="currentColor"/>
+                </svg>
+            </a>
+            <div class="nav__group nav__group--right">
+                <a href="https://www.linkedin.com/" class="nav-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="index.html#about" class="nav-link">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="play-main">
+        <section class="play-hero" data-parallax aria-labelledby="play-hero-heading">
+            <div class="play-hero__bg" aria-hidden="true">
+                <div class="play-hero__glow"></div>
+                <div class="play-hero__lv-bar" data-parallax-depth="0.4" style="--fx: 15%; --fy: 30%;"></div>
+                <div class="play-hero__lv-sq" data-parallax-depth="-0.35" style="--fx: 88%; --fy: 65%;"></div>
+                <div class="play-hero__noise"></div>
+                <div class="play-hero__notch"></div>
+            </div>
+            <div class="play-hero__inner">
+                <div class="play-hero__art" aria-hidden="true">
+                    <svg class="play-ufo" viewBox="0 0 120 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="60" cy="34" rx="38" ry="13" stroke="currentColor" stroke-width="2.2"/>
+                        <path d="M22 36c10-22 86-22 96 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                        <ellipse cx="60" cy="38" rx="10" ry="6" stroke="currentColor" stroke-width="1.8"/>
+                        <circle cx="60" cy="38" r="2.5" fill="currentColor"/>
+                        <rect x="46" y="72" width="28" height="22" rx="4" stroke="currentColor" stroke-width="2.2"/>
+                        <path d="M60 56v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h1 id="play-hero-heading" class="play-hero__title">360° Designer</h1>
+                <p class="play-hero__sub">Call it UX, call it art direction, call it creative chaos — I just call it making things that people remember.</p>
+
+                <div class="play-pills" aria-label="Focus areas">
+                    <span class="play-pill">Product design</span>
+                    <span class="play-pill">Art direction</span>
+                    <span class="play-pill">User interface design</span>
+                    <span class="play-pill">Branding &amp; visual</span>
+                    <span class="play-pill">Motion design</span>
+                    <span class="play-pill">Pitch deck design</span>
+                    <span class="play-pill">User research</span>
+                    <span class="play-pill">Graphic design</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="play-things" aria-labelledby="play-things-heading">
+            <div class="play-things__inner">
+                <h2 id="play-things-heading" class="play-things__title">Things I make when no one’s asking</h2>
+                <p class="play-things__lede">Some days it’s a tiny game, other days it’s an editorial experiment — play is where I try ideas without a brief.</p>
+
+                <ul class="play-cards">
+                    <li>
+                        <a class="play-card" href="projects/shared-bloomed.html">
+                            <span class="play-card__tag">Play</span>
+                            <span class="play-card__name">Shared bloomed</span>
+                            <span class="play-card__desc">Experimental editorial piece — full project on Readymag.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="play-card" href="../I want to be a cockroach/index.html">
+                            <span class="play-card__tag">Game</span>
+                            <span class="play-card__name">I want to be a cockroach</span>
+                            <span class="play-card__desc">In-browser experiment from this repo — open to play.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="play-card" href="projects/plant-game.html">
+                            <span class="play-card__tag">Play</span>
+                            <span class="play-card__name">Just a watering plant game</span>
+                            <span class="play-card__desc">Interactive watering game — live build on hanhoan.xyz.</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <p class="play-things__foot">
+                    <a href="index.html#work" class="play-things__link">See work →</a>
+                    <span class="play-things__sep">·</span>
+                    <a href="index.html#about" class="play-things__link">About →</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="play-foot">
+        <p><a href="index.html">Nguyen Ngoc Bao Han</a> — © <span id="current-year">2026</span></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
