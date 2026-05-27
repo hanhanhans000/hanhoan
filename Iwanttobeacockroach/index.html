@@ -2883,7 +2883,7 @@ ________________________________________________________________________________
                 const menuSongUrl = AUDIO_SOURCES[0];
                 this.currentSong = menuSongUrl;
                 if (menuSongUrl) {
-                  this.audio.src = menuSongUrl;
+                  this.setAudioSource(this.audio, menuSongUrl, "menuMusic");
                   this.audio.volume = this.musicVolume;
                   this.audio.loop = true;
                   this.audio.load();
@@ -2988,7 +2988,7 @@ ________________________________________________________________________________
                 this.audio.pause();
                 this.audio.currentTime = 0;
               }
-              this.audio.src = songUrl;
+              this.setAudioSource(this.audio, songUrl, "menuMusic");
               this.audio.volume = this.musicVolume;
               this.audio.loop = true;
               // Load the audio file
@@ -3076,7 +3076,7 @@ ________________________________________________________________________________
               const songUrl = AUDIO_SOURCES[1]; // Stage 1 music
               this.currentSong = songUrl;
               if (songUrl) {
-                this.audio.src = songUrl;
+                this.setAudioSource(this.audio, songUrl, "stage1Music");
                 this.audio.volume = this.musicVolume;
                 this.audio.loop = true;
                 // Load the new source first
@@ -3404,7 +3404,7 @@ ________________________________________________________________________________
             if (this.currentSong !== songUrl) {
               this.currentSong = songUrl;
               if (songUrl) {
-                this.audio.src = songUrl;
+                this.setAudioSource(this.audio, songUrl, "stageMusic");
                 this.audio.volume = this.musicVolume;
                 this.audio.loop = true;
                 // Load the new source first
@@ -3549,6 +3549,60 @@ ________________________________________________________________________________
           this.resetIdleTimer();
         }
 
+        buildAudioPathCandidates(relativePath) {
+          if (!relativePath) return [];
+          if (/^(https?:|data:|blob:|\/)/i.test(relativePath)) {
+            return [relativePath];
+          }
+          const normalized = relativePath.replace(/\\/g, "/");
+          const candidates = [
+            normalized,
+            `./${normalized}`,
+            `Iwanttobeacockroach/${normalized}`,
+            `./Iwanttobeacockroach/${normalized}`,
+          ];
+          return [...new Set(candidates)];
+        }
+
+        setupAudioFallback(audioEl, label) {
+          if (!audioEl || audioEl.__fallbackReady) return;
+          audioEl.__fallbackReady = true;
+          audioEl.__audioLabel = label || "audio";
+          audioEl.__pathCandidates = [];
+          audioEl.__pathIndex = 0;
+          audioEl.__relativePath = "";
+
+          audioEl.addEventListener("error", () => {
+            const nextIndex = (audioEl.__pathIndex || 0) + 1;
+            const nextPath = (audioEl.__pathCandidates || [])[nextIndex];
+            if (nextPath) {
+              audioEl.__pathIndex = nextIndex;
+              audioEl.src = nextPath;
+              audioEl.load();
+              audioEl.play().catch(() => {});
+              console.warn(
+                `[audio] retrying ${audioEl.__audioLabel} with fallback path: ${nextPath}`
+              );
+              return;
+            }
+            console.error(
+              `[audio] failed to load ${audioEl.__audioLabel}: ${audioEl.__relativePath}`
+            );
+          });
+        }
+
+        setAudioSource(audioEl, relativePath, label) {
+          if (!audioEl) return;
+          this.setupAudioFallback(audioEl, label);
+          const candidates = this.buildAudioPathCandidates(relativePath);
+          audioEl.__pathCandidates = candidates;
+          audioEl.__pathIndex = 0;
+          audioEl.__relativePath = relativePath || "";
+          if (candidates.length > 0) {
+            audioEl.src = candidates[0];
+          }
+        }
+
         playMovementSound() {
           // Randomly select one of the 6 movement sounds
           const randomIndex = Math.floor(
@@ -3557,7 +3611,7 @@ ________________________________________________________________________________
           const soundPath = SOUND_PATHS.movement[randomIndex];
 
           // Play the sound effect
-          this.sfxAudio.src = soundPath;
+          this.setAudioSource(this.sfxAudio, soundPath, "movement");
           this.sfxAudio.currentTime = 0; // Reset to start
           this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
           this.sfxAudio.play().catch((e) => {
@@ -3567,7 +3621,7 @@ ________________________________________________________________________________
         }
 
         playSpraySound() {
-          this.sprayAudio.src = SOUND_PATHS.spray;
+          this.setAudioSource(this.sprayAudio, SOUND_PATHS.spray, "spray");
           this.sprayAudio.currentTime = 0;
           this.sprayAudio.volume = this.sprayBaseVolume * this.sfxVolume;
           this.sprayAudio.play().catch((e) => {
@@ -3576,7 +3630,7 @@ ________________________________________________________________________________
         }
 
         playEndLevelSound() {
-          this.endLevelAudio.src = SOUND_PATHS.endLevel;
+          this.setAudioSource(this.endLevelAudio, SOUND_PATHS.endLevel, "endLevel");
           this.endLevelAudio.currentTime = 0;
           this.endLevelAudio.volume = this.endLevelBaseVolume * this.sfxVolume;
           this.endLevelAudio.play().catch((e) => {
@@ -3586,7 +3640,7 @@ ________________________________________________________________________________
 
         playCatSound() {
           if (!this.catAudio) return;
-          this.catAudio.src = SOUND_PATHS.catWarn;
+          this.setAudioSource(this.catAudio, SOUND_PATHS.catWarn, "catWarn");
           this.catAudio.currentTime = 0;
           this.catAudio.volume = this.catBaseVolume * this.sfxVolume;
           this.catAudio.play().catch(() => {});
@@ -3594,7 +3648,7 @@ ________________________________________________________________________________
 
         playCatAngrySound() {
           if (!this.catAngryAudio) return;
-          this.catAngryAudio.src = SOUND_PATHS.catAngry;
+          this.setAudioSource(this.catAngryAudio, SOUND_PATHS.catAngry, "catAngry");
           this.catAngryAudio.currentTime = 0;
           this.catAngryAudio.volume = this.catAngryBaseVolume * this.sfxVolume;
           this.catAngryAudio.play().catch(() => {});
@@ -3602,7 +3656,7 @@ ________________________________________________________________________________
 
         playMouseSound() {
           if (!this.mouseAudio) return;
-          this.mouseAudio.src = SOUND_PATHS.mouse;
+          this.setAudioSource(this.mouseAudio, SOUND_PATHS.mouse, "mouse");
           this.mouseAudio.currentTime = 0;
           this.mouseAudio.volume = this.mouseBaseVolume * this.sfxVolume;
           this.mouseAudio.play().catch(() => {});
@@ -3645,7 +3699,11 @@ ________________________________________________________________________________
           // Slightly lower overall so it doesn't overwhelm BGM, and scaled by sfxVolume
           targetVol *= 0.7 * this.sfxVolume;
 
-          this.scooterAudio.src = SOUND_PATHS.scooterTraffic;
+          this.setAudioSource(
+            this.scooterAudio,
+            SOUND_PATHS.scooterTraffic,
+            "scooterTraffic"
+          );
 
           // Start playing if not already
           if (this.scooterAudio.paused) {
@@ -4597,7 +4655,7 @@ ________________________________________________________________________________
               // Scooter collision feels like a stomp → shake
               this.triggerScreenShake();
               // Scooter honk on impact
-              this.sfxAudio.src = SOUND_PATHS.scooterHonk;
+              this.setAudioSource(this.sfxAudio, SOUND_PATHS.scooterHonk, "scooterHonk");
               this.sfxAudio.currentTime = 0;
               this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
               this.sfxAudio.play().catch(() => {});
@@ -4690,7 +4748,7 @@ ________________________________________________________________________________
                 // Bite → red flash
                 this.triggerDamageFlash("red");
                 // Ant bite chomp
-                this.sfxAudio.src = SOUND_PATHS.antChomp;
+                this.setAudioSource(this.sfxAudio, SOUND_PATHS.antChomp, "antChomp");
                 this.sfxAudio.currentTime = 0;
                 this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
                 this.sfxAudio.play().catch(() => {});
@@ -4821,7 +4879,7 @@ ________________________________________________________________________________
                 // Gecko bite (Stage 1 enemy) → red flash
                 this.triggerDamageFlash("red");
                 // Gecko slurp sound
-                this.sfxAudio.src = SOUND_PATHS.geckoSlurp;
+                this.setAudioSource(this.sfxAudio, SOUND_PATHS.geckoSlurp, "geckoSlurp");
                 this.sfxAudio.currentTime = 0;
                 this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
                 this.sfxAudio.play().catch(() => {});
