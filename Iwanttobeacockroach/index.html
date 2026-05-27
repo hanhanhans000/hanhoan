@@ -2809,29 +2809,35 @@ ________________________________________________________________________________
           // Separate volume controls for music vs SFX
           this.musicVolume = 0.7; // background music (knob 1) - default 70%
           this.sfxVolume = 1.0; // sound effects (knob 2)
-          this.audio.volume = this.musicVolume;
+          this.musicMasterScale = 0.7; // overall BGM is 30% quieter
+          this.sfxMasterScale = 0.85; // all SFX are 15% quieter
+          this.audio.volume = this.getEffectiveMusicVolume();
           this.lastDeathCause = "unknown";
 
           // Sound effect audio elements
           this.sfxAudio = new Audio();
           this.sfxBaseVolume = 0.7;
-          this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume; // movement / misc sfx
+          this.sfxAudio.volume = this.getEffectiveSfxVolume(this.sfxBaseVolume); // movement / misc sfx
           this.sprayAudio = new Audio();
           this.sprayBaseVolume = 0.8;
-          this.sprayAudio.volume = this.sprayBaseVolume * this.sfxVolume;
+          this.sprayAudio.volume = this.getEffectiveSfxVolume(this.sprayBaseVolume);
           this.endLevelAudio = new Audio();
           this.endLevelBaseVolume = 0.9;
-          this.endLevelAudio.volume = this.endLevelBaseVolume * this.sfxVolume;
+          this.endLevelAudio.volume = this.getEffectiveSfxVolume(
+            this.endLevelBaseVolume
+          );
           // New dedicated audio channels
           this.catAudio = new Audio(); // warning meow
           this.catBaseVolume = 0.9;
-          this.catAudio.volume = this.catBaseVolume * this.sfxVolume;
+          this.catAudio.volume = this.getEffectiveSfxVolume(this.catBaseVolume);
           this.catAngryAudio = new Audio(); // hit meow
           this.catAngryBaseVolume = 0.9;
-          this.catAngryAudio.volume = this.catAngryBaseVolume * this.sfxVolume;
+          this.catAngryAudio.volume = this.getEffectiveSfxVolume(
+            this.catAngryBaseVolume
+          );
           this.mouseAudio = new Audio();
           this.mouseBaseVolume = 0.9;
-          this.mouseAudio.volume = this.mouseBaseVolume * this.sfxVolume;
+          this.mouseAudio.volume = this.getEffectiveSfxVolume(this.mouseBaseVolume);
           this.scooterAudio = new Audio();
           this.scooterAudio.loop = true;
           this.scooterAudio.volume = 0.0; // start silent, fade in when close (scaled by sfxVolume later)
@@ -2884,7 +2890,7 @@ ________________________________________________________________________________
                 this.currentSong = menuSongUrl;
                 if (menuSongUrl) {
                   this.setAudioSource(this.audio, menuSongUrl, "menuMusic");
-                  this.audio.volume = this.musicVolume;
+                  this.audio.volume = this.getEffectiveMusicVolume();
                   this.audio.loop = true;
                   this.audio.load();
                   this.audio.play().catch(() => {});
@@ -2989,7 +2995,7 @@ ________________________________________________________________________________
                 this.audio.currentTime = 0;
               }
               this.setAudioSource(this.audio, songUrl, "menuMusic");
-              this.audio.volume = this.musicVolume;
+              this.audio.volume = this.getEffectiveMusicVolume();
               this.audio.loop = true;
               // Load the audio file
               this.audio.load();
@@ -3077,7 +3083,7 @@ ________________________________________________________________________________
               this.currentSong = songUrl;
               if (songUrl) {
                 this.setAudioSource(this.audio, songUrl, "stage1Music");
-                this.audio.volume = this.musicVolume;
+                this.audio.volume = this.getEffectiveMusicVolume();
                 this.audio.loop = true;
                 // Load the new source first
                 this.audio.load();
@@ -3405,7 +3411,7 @@ ________________________________________________________________________________
               this.currentSong = songUrl;
               if (songUrl) {
                 this.setAudioSource(this.audio, songUrl, "stageMusic");
-                this.audio.volume = this.musicVolume;
+                this.audio.volume = this.getEffectiveMusicVolume();
                 this.audio.loop = true;
                 // Load the new source first
                 this.audio.load();
@@ -3603,6 +3609,17 @@ ________________________________________________________________________________
           }
         }
 
+        getEffectiveMusicVolume() {
+          return Math.max(0, Math.min(1, this.musicVolume * this.musicMasterScale));
+        }
+
+        getEffectiveSfxVolume(baseVolume) {
+          return Math.max(
+            0,
+            Math.min(1, baseVolume * this.sfxVolume * this.sfxMasterScale)
+          );
+        }
+
         playMovementSound() {
           // Randomly select one of the 6 movement sounds
           const randomIndex = Math.floor(
@@ -3613,7 +3630,7 @@ ________________________________________________________________________________
           // Play the sound effect
           this.setAudioSource(this.sfxAudio, soundPath, "movement");
           this.sfxAudio.currentTime = 0; // Reset to start
-          this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
+          this.sfxAudio.volume = this.getEffectiveSfxVolume(this.sfxBaseVolume);
           this.sfxAudio.play().catch((e) => {
             // Silently fail if audio can't play (e.g., user hasn't interacted yet)
             console.log("Movement sound waiting for user interaction");
@@ -3623,7 +3640,7 @@ ________________________________________________________________________________
         playSpraySound() {
           this.setAudioSource(this.sprayAudio, SOUND_PATHS.spray, "spray");
           this.sprayAudio.currentTime = 0;
-          this.sprayAudio.volume = this.sprayBaseVolume * this.sfxVolume;
+          this.sprayAudio.volume = this.getEffectiveSfxVolume(this.sprayBaseVolume);
           this.sprayAudio.play().catch((e) => {
             console.log("Spray sound waiting for user interaction");
           });
@@ -3632,7 +3649,9 @@ ________________________________________________________________________________
         playEndLevelSound() {
           this.setAudioSource(this.endLevelAudio, SOUND_PATHS.endLevel, "endLevel");
           this.endLevelAudio.currentTime = 0;
-          this.endLevelAudio.volume = this.endLevelBaseVolume * this.sfxVolume;
+          this.endLevelAudio.volume = this.getEffectiveSfxVolume(
+            this.endLevelBaseVolume
+          );
           this.endLevelAudio.play().catch((e) => {
             console.log("End level sound waiting for user interaction");
           });
@@ -3642,7 +3661,7 @@ ________________________________________________________________________________
           if (!this.catAudio) return;
           this.setAudioSource(this.catAudio, SOUND_PATHS.catWarn, "catWarn");
           this.catAudio.currentTime = 0;
-          this.catAudio.volume = this.catBaseVolume * this.sfxVolume;
+          this.catAudio.volume = this.getEffectiveSfxVolume(this.catBaseVolume);
           this.catAudio.play().catch(() => {});
         }
 
@@ -3650,7 +3669,9 @@ ________________________________________________________________________________
           if (!this.catAngryAudio) return;
           this.setAudioSource(this.catAngryAudio, SOUND_PATHS.catAngry, "catAngry");
           this.catAngryAudio.currentTime = 0;
-          this.catAngryAudio.volume = this.catAngryBaseVolume * this.sfxVolume;
+          this.catAngryAudio.volume = this.getEffectiveSfxVolume(
+            this.catAngryBaseVolume
+          );
           this.catAngryAudio.play().catch(() => {});
         }
 
@@ -3658,7 +3679,7 @@ ________________________________________________________________________________
           if (!this.mouseAudio) return;
           this.setAudioSource(this.mouseAudio, SOUND_PATHS.mouse, "mouse");
           this.mouseAudio.currentTime = 0;
-          this.mouseAudio.volume = this.mouseBaseVolume * this.sfxVolume;
+          this.mouseAudio.volume = this.getEffectiveSfxVolume(this.mouseBaseVolume);
           this.mouseAudio.play().catch(() => {});
         }
 
@@ -3697,7 +3718,7 @@ ________________________________________________________________________________
           const clamped = Math.max(0, Math.min(maxHearDist, minDist));
           let targetVol = 1 - clamped / maxHearDist; // 0‑1
           // Slightly lower overall so it doesn't overwhelm BGM, and scaled by sfxVolume
-          targetVol *= 0.7 * this.sfxVolume;
+          targetVol *= 0.7 * this.sfxVolume * this.sfxMasterScale;
 
           this.setAudioSource(
             this.scooterAudio,
@@ -4657,7 +4678,7 @@ ________________________________________________________________________________
               // Scooter honk on impact
               this.setAudioSource(this.sfxAudio, SOUND_PATHS.scooterHonk, "scooterHonk");
               this.sfxAudio.currentTime = 0;
-              this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
+              this.sfxAudio.volume = this.getEffectiveSfxVolume(this.sfxBaseVolume);
               this.sfxAudio.play().catch(() => {});
               this.scooters.splice(i, 1);
               continue;
@@ -4750,7 +4771,7 @@ ________________________________________________________________________________
                 // Ant bite chomp
                 this.setAudioSource(this.sfxAudio, SOUND_PATHS.antChomp, "antChomp");
                 this.sfxAudio.currentTime = 0;
-                this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
+                this.sfxAudio.volume = this.getEffectiveSfxVolume(this.sfxBaseVolume);
                 this.sfxAudio.play().catch(() => {});
               }
             } else if (enemy.type === "MOUSE") {
@@ -4881,7 +4902,7 @@ ________________________________________________________________________________
                 // Gecko slurp sound
                 this.setAudioSource(this.sfxAudio, SOUND_PATHS.geckoSlurp, "geckoSlurp");
                 this.sfxAudio.currentTime = 0;
-                this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
+                this.sfxAudio.volume = this.getEffectiveSfxVolume(this.sfxBaseVolume);
                 this.sfxAudio.play().catch(() => {});
               }
             }
@@ -5300,7 +5321,7 @@ ________________________________________________________________________________
             if (data1 === MIDI_CONFIG.volMusicCC) {
               const vol = Math.max(0, Math.min(1, data2 / 127));
               this.musicVolume = vol;
-              this.audio.volume = this.musicVolume;
+              this.audio.volume = this.getEffectiveMusicVolume();
               this.updateVolumeDisplay();
             }
             // Knob 2 → SFX (movement, hazards, cat, mouse, scooter, etc.)
@@ -5308,12 +5329,16 @@ ________________________________________________________________________________
               const vol = Math.max(0, Math.min(1, data2 / 127));
               this.sfxVolume = vol;
               // Update all SFX channels
-              this.sfxAudio.volume = this.sfxBaseVolume * this.sfxVolume;
-              this.sprayAudio.volume = this.sprayBaseVolume * this.sfxVolume;
+              this.sfxAudio.volume = this.getEffectiveSfxVolume(this.sfxBaseVolume);
+              this.sprayAudio.volume = this.getEffectiveSfxVolume(
+                this.sprayBaseVolume
+              );
               this.endLevelAudio.volume =
-                this.endLevelBaseVolume * this.sfxVolume;
-              this.catAudio.volume = this.catBaseVolume * this.sfxVolume;
-              this.mouseAudio.volume = this.mouseBaseVolume * this.sfxVolume;
+                this.getEffectiveSfxVolume(this.endLevelBaseVolume);
+              this.catAudio.volume = this.getEffectiveSfxVolume(this.catBaseVolume);
+              this.mouseAudio.volume = this.getEffectiveSfxVolume(
+                this.mouseBaseVolume
+              );
               // scooterAudio volume is scaled inside updateScooterSound()
               this.updateVolumeDisplay();
             }
